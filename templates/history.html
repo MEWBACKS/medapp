@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>履歴</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+  margin: 0;
+  padding: 0;
+}
+
+/* カード風 */
+.container {
+  max-width: 700px;
+  margin: 20px auto;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+h3 {
+  margin-top: 24px;
+  color: #555;
+}
+
+/* テーブル */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+}
+
+th {
+  background: #e3f2fd;
+  padding: 10px;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* ボタン */
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin: 2px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.edit {
+  background: #8ecae6;
+  color: #0a3d62;
+}
+
+.delete {
+  background: #ffadad;
+  color: #5a1e1e;
+}
+
+/* 下メニュー */
+.menu {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.menu a {
+  text-decoration: none;
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* メッセージ */
+.empty-msg {
+  text-align: center;
+  color: #888;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📚 履歴一覧</h2>
+
+<!-- ===== 病院記録 ===== -->
+<h3>🏥 病院での記録</h3>
+{% if hospital_rows %}
+<table>
+<tr>
+  <th>日付</th>
+  <th>血圧</th>
+  <th>体温</th>
+  <th>操作</th>
+</tr>
+{% for row in hospital_rows %}
+<tr>
+  <td>{{ row.date }}</td>
+  <td>{{ row.blood_pressure }}</td>
+  <td>{{ row.temperature }}</td>
+  <td>
+    <button class="btn edit"
+    onclick="location.href='{{ url_for('edit', date=row.date) }}'">
+    ✏ 編集
+    </button>
+
+
+
+    <form method="post" action="{{ url_for('delete', date=row.date) }}" style="display:inline;" onsubmit="return confirm('削除しますか？');">
+      <button class="btn delete" type="submit">🗑 削除</button>
+    </form>
+  </td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p class="empty-msg">病院記録はありません</p>
+{% endif %}
+
+<!-- ===== 自宅測定 ===== -->
+<h3>🏠 自宅での測定</h3>
+{% if home_rows %}
+<table>
+<tr>
+  <th>日付</th>
+  <th>体重</th>
+  <th>血圧</th>
+  <th>体温</th>
+  <th>服薬チェック</th>
+  <th>操作</th>
+</tr>
+{% for row in home_rows %}
+<tr>
+  <td>{{ row.date }}</td>
+  <td>{{ row.weight }}</td>
+  <td>{{ row.blood_pressure }}</td>
+  <td>{{ row.temperature }}</td>
+  <td>{{ row.meds_taken }}</td>
+  <td>
+    <button class="btn edit" onclick="location.href='{{ url_for('edit_home', date=row.date) }}'">✏ 編集</button>
+    <form method="post" action="{{ url_for('delete_home', date=row.date) }}" style="display:inline;" onsubmit="return confirm('削除しますか？');">
+      <button class="btn delete" type="submit">🗑 削除</button>
+    </form>
+  </td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p class="empty-msg">自宅測定はまだありません</p>
+{% endif %}
+
+<!-- 下メニュー -->
+<div class="menu">
+  <a href="{{ url_for('home') }}">🏠 ホーム</a>
+  <a href="{{ url_for('calendar_view') }}">📅 カレンダー</a>
+</div>
+
+</div>
+</body>
+</html>

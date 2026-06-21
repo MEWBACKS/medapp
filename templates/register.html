@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>新規登録</title>
+
+<style>
+body {
+    font-family: "Hiragino Sans", sans-serif;
+    background: #f0f6fb;
+}
+
+.box {
+    max-width: 400px;
+    margin: 60px auto;
+    background: white;
+    padding: 16px 30px 16px 16px;        /* 右側ゆったり */
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background: #4c91af;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #3b7a95;
+}
+
+.link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #4c91af;
+    text-decoration: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>📝 新規登録</h2>
+
+<form method="POST">
+
+    <label>ID</label>
+    <input type="text" name="id" required placeholder="ユーザーID">
+
+    <label>パスワード</label>
+    <input type="password" name="password" required placeholder="パスワード">
+
+    <button class="btn" type="submit">登録</button>
+
+</form>
+
+<a class="link" href="/login">ログインはこちら</a>
+
+</div>
+
+</body>
+</html>

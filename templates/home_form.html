@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>🏠 自宅測定</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  background: #f0f7ff;
+}
+
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.save-btn {
+  background: #a8d5ff;
+  color: #0a2a4a;
+  border: none;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* 保存・更新ボタン（カード風） */
+.save-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 14px;
+  font-size: 17px;
+  font-weight: bold;
+
+  background: #b8e0d2;          /* パステルグリーン */
+  color: #1b4332;
+
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* 編集時（更新ボタン）は色変更 */
+.save-btn.edit {
+  background: #ffd6a5;          /* パステルオレンジ */
+  color: #7a3e00;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+  opacity: 0.95;
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+}
+
+
+/* 下メニュー */
+.bottom-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.bottom-card {
+  background: #f0f4ff;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.bottom-card a {
+  text-decoration: none;
+  color: #333;
+}
+
+.icon {
+  font-size: 22px;
+  display: block;
+}
+
+.text {
+  font-size: 12px;
+}
+
+.top-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🏠 自宅測定入力</h1>
+
+<form method="post">
+
+<label>日付</label>
+<input type="date" name="date" required>
+
+<label>体重（kg）</label>
+<input type="text" name="weight" placeholder="例：52.3">
+
+<label>家での血圧</label>
+<input type="text" name="bp_home" placeholder="例：118/76">
+
+<label>家での体温（℃）</label>
+<input type="text" name="temp_home" placeholder="例：36.4">
+
+<label>💊 服薬チェック</label>
+<select name="medicine_check">
+  <option value="飲んだ">飲んだ</option>
+  <option value="飲み忘れ">飲み忘れ</option>
+  <option value="今日は薬なし">今日は薬なし</option>
+</select>
+
+
+<label>メモ</label>
+<textarea name="memo" rows="3"
+placeholder="体調・運動・食事など"></textarea>
+
+<button class="save-btn {% if edit %}edit{% endif %}" type="submit">
+  {% if edit %}
+    ✏ 更新する
+  {% else %}
+    💾 保存する
+  {% endif %}
+</button>
+
+
+</form>
+
+<br>
+<!-- ===== 下メニュー ===== -->
+<div class="bottom-menu">
+
+  <div class="bottom-card">
+    <a href="{{ url_for('home') }}">
+      <span class="icon">🏠</span>
+      <span class="text">ホーム</span>
+    </a>
+  </div>
+
+  <div class="bottom-card">
+    <a href="{{ url_for('history') }}">
+      <span class="icon">📖</span>
+      <span class="text">履歴</span>
+    </a>
+  </div>
+
+  <div class="bottom-card">
+    <a href="{{ url_for('calendar_view') }}">
+      <span class="icon">📅</span>
+      <span class="text">カレンダー</span>
+    </a>
+  </div>
+
+  <div class="bottom-card">
+    <a href="{{ url_for('graph') }}">
+      <span class="icon">📊</span>
+      <span class="text">グラフ</span>
+    </a>
+  </div>
+
+</div>
+
+
+</div>
+</body>
+</html>

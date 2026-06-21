@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>💊 今日の服薬</title>
+
+<style>
+body {
+  background: #f6f8ff;
+  font-family: sans-serif;
+}
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+}
+.card {
+  background: #f0f4ff;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+label {
+  margin-right: 10px;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #9dbdff;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>💊 今日の服薬チェック</h1>
+<p>{{ today }}</p>
+
+<form method="post">
+
+{% for m in medicines %}
+  <div class="card">
+    <strong>{{ m.medicine_name }}</strong><br>
+
+    {% for t, label in [("morning","🌅朝"),("noon","🌞昼"),("night","🌙夜")] %}
+      {% if m[t] == "1" %}
+        <label>
+          <input type="checkbox"
+                 name="{{ m.medicine_name }}_{{ t }}"
+                 {% if logs.get((m.medicine_name, t)) == "1" %}checked{% endif %}>
+          {{ label }}
+        </label>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endfor %}
+
+<button>💾 保存</button>
+</form>
+
+<a href="{{ url_for('home') }}">🏠 ホームへ</a>
+
+</div>
+</body>
+</html>

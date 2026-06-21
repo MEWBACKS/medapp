@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ホーム</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+  text-align: center;
+}
+
+.container {
+  width: 95%;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.title {
+  font-size: 24px;
+  margin: 15px 0;
+}
+
+/* 2列レイアウト */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* カード */
+.card {
+  background: white;
+  padding: 18px 10px;
+  border-radius: 16px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  transition: 0.2s;
+}
+
+.card:hover {
+  background: #eef3ff;
+}
+
+.icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.text {
+  font-size: 14px;
+  color: #555;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+/* ===== 自宅測定を目立たせる ===== */
+.home-card {
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  grid-column: span 2;
+  padding: 26px 10px;
+}
+
+.home-card .icon {
+  font-size: 46px;
+}
+
+.home-card .text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.input-btn {
+  background: #2ecc71;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+/* ===== 服薬チェック ===== */
+.medicine-card {
+  grid-column: span 2;
+  text-align: left;
+}
+
+.medicine-item {
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+.medicine-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.timing label {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.save-btn {
+  margin-top: 10px;
+  background: #4a6cff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* ログアウト */
+.logout-fixed {
+  position: fixed;
+  bottom: 20px;
+  right: 15px;
+  color: #888;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.logout-fixed:hover {
+  opacity: 1;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">🌱 健康記録アプリ</div>
+
+<div class="grid">
+
+  <!-- 自宅測定 -->
+  <div class="card home-card">
+    <a href="{{ url_for('home_input') }}">
+      <span class="icon">🏠</span>
+      <span class="text">自宅測定入力（毎日）</span>
+      <div class="input-btn">＋ 今日の測定を記録</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('input_form') }}">
+      <span class="icon">📝</span>
+      <span class="text">病院結果入力</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('history') }}">
+      <span class="icon">📚</span>
+      <span class="text">履歴</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('graph') }}">
+      <span class="icon">📈</span>
+      <span class="text">グラフ</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('calendar_view') }}">
+      <span class="icon">📅</span>
+      <span class="text">カレンダー</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('profile') }}">
+      <span class="icon">👤</span>
+      <span class="text">基本情報</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="{{ url_for('pharmacy') }}">
+      <span class="icon">💊</span>
+      <span class="text">薬局提示</span>
+    </a>
+  </div>
+
+<div class="card">
+  <a href="{{ url_for('medicine') }}">
+    <span class="icon">➕</span>
+    <span class="text">薬を登録</span>
+  </a>
+</div>
+
+
+  <!-- ===== 今日の服薬チェック ===== -->
+  <div class="card medicine-card">
+    <h3>💊 今日の服薬チェック（{{ today }}）</h3>
+
+    {% if medicines %}
+    <form method="POST" action="{{ url_for('medicine_check') }}">
+      {% for m in medicines %}
+        <div class="medicine-item">
+          <div class="medicine-name">{{ m.medicine_name }}</div>
+
+          <div class="timing">
+            {% for timing, label in [("morning","朝"),("noon","昼"),("night","夜")] %}
+              {% if m[timing] == "1" %}
+                <label>
+                  <input type="checkbox"
+                         name="{{ m.medicine_name }}_{{ timing }}"
+                         {% if logs.get((m.medicine_name, timing)) == "1" %}checked{% endif %}>
+                  {{ label }}
+                </label>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <button class="save-btn" type="submit">保存</button>
+    </form>
+    {% else %}
+      <p style="color:#777;">登録されている薬がありません</p>
+      <a href="{{ url_for('medicine') }}">＋ 薬を登録する</a>
+    {% endif %}
+  </div>
+
+</div>
+
+<a href="{{ url_for('logout') }}" class="logout-fixed">
+  🚪 ログアウト
+</a>
+
+</div>
+
+</body>
+</html>

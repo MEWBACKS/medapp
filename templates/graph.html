@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>📊 健康グラフ</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 16px;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+/* データなし表示 */
+.no-data {
+  text-align: center;
+  padding: 30px 10px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* 下メニュー */
+.bottom-menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.bottom-card {
+  background: #f0f4ff;
+  padding: 10px 4px;
+  border-radius: 14px;
+}
+
+.bottom-card a {
+  text-decoration: none;
+  color: #333;
+}
+
+.icon {
+  font-size: 22px;
+  display: block;
+}
+
+.text {
+  font-size: 12px;
+}
+
+.bottom-card:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="page-title">📊 健康グラフ</div>
+
+  <!-- ===== 体温 ===== -->
+  <div class="card">
+    <h3>🌡 体温の推移</h3>
+
+    {% if has_temp %}
+      <img src="/static/temp.png" alt="体温グラフ">
+    {% else %}
+      <div class="no-data">
+        まだ体温の記録がありません 🌱<br>
+        記録するとここにグラフが表示されます
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ===== 血圧 ===== -->
+  <div class="card">
+    <h3>💓 血圧の推移</h3>
+
+    {% if has_bp %}
+      <img src="/static/bp.png" alt="血圧グラフ">
+    {% else %}
+      <div class="no-data">
+        まだ血圧の記録がありません 🌸<br>
+        入力すると推移が見られます
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ===== 下メニュー ===== -->
+  <div class="bottom-menu">
+
+    <div class="bottom-card">
+      <a href="{{ url_for('home') }}">
+        <span class="icon">🏠</span>
+        <span class="text">ホーム</span>
+      </a>
+    </div>
+
+    <div class="bottom-card">
+      <a href="/history">
+        <span class="icon">📖</span>
+        <span class="text">履歴</span>
+      </a>
+    </div>
+
+    <div class="bottom-card">
+      <a href="/calendar">
+        <span class="icon">📅</span>
+        <span class="text">カレンダー</span>
+      </a>
+    </div>
+
+    <div class="bottom-card">
+      <a href="/graph">
+        <span class="icon">📊</span>
+        <span class="text">グラフ</span>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
+

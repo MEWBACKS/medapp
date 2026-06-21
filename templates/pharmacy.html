@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>薬局提示画面</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+}
+
+/* メインカード */
+.container {
+  max-width: 650px;
+  margin: 15px auto;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* セクション */
+.section {
+  background: #f9fbff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+h2 {
+  margin: 0 0 5px 0;
+  font-size: 17px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.empty {
+  color: #888;
+}
+
+/* 上メニュー */
+.top-menu {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.top-menu a {
+  text-decoration: none;
+  background: #e3f2fd;
+  padding: 6px 10px;
+  border-radius: 10px;
+  color: #0a3d62;
+  font-size: 14px;
+}
+
+/* 強調カード */
+.highlight {
+  background: #fff0f6;
+  border-left: 4px solid #ff85a1;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📱 薬局提示</h1>
+<p style="text-align:center;">{{ today }}</p>
+
+<!-- メニュー -->
+<div class="top-menu">
+  <a href="{{ url_for('home') }}">🏠 ホーム</a>
+  <a href="/input">📝 入力</a>
+  <a href="/history">📖 履歴</a>
+</div>
+
+
+<div class="section">
+<h2>🧍 基本情報</h2>
+
+<p><span class="label">生年月日：</span>
+{{ profile.birth if profile.birth else "未登録" }}</p>
+
+<p><span class="label">年齢：</span>
+{{ age if age else "未登録" }}</p>
+
+<p><span class="label">アレルギー：</span>
+{{ profile.allergy if profile.allergy else "未登録" }}</p>
+
+<p><span class="label">持病：</span>
+{{ profile.disease if profile.disease else "未登録" }}</p>
+
+<p><span class="label">服用中の薬：</span><br>
+{{ profile.medicine if profile.medicine else "未登録" }}</p>
+
+<p><span class="label">かかりつけ：</span>
+{{ profile.hospital if profile.hospital else "未登録" }}</p>
+</div>
+
+
+<div class="section">
+<h3>🚬 喫煙</h3>
+<p>有無：{{ profile.smoking if profile.smoking else "未登録" }}</p>
+<p>本数：{{ profile.smoking_amount if profile.smoking_amount else "未登録" }}</p>
+<p>開始：{{ profile.smoking_since if profile.smoking_since else "未登録" }}</p>
+</div>
+
+
+<div class="section">
+<h3>🍺 飲酒</h3>
+<p>有無：{{ profile.alcohol if profile.alcohol else "未登録" }}</p>
+<p>頻度・量：{{ profile.alcohol_amount if profile.alcohol_amount else "未登録" }}</p>
+</div>
+
+
+<div class="section highlight">
+<h2>📝 今日の症状</h2>
+<p>{{ record.symptom if record and record.symptom else "なし" }}</p>
+</div>
+
+
+<div class="section">
+<h2>🏥 来局理由</h2>
+<p>{{ record.visit_reason if record and record.visit_reason else "なし" }}</p>
+</div>
+
+
+<div class="section">
+<h2>🧪 最近の検査値</h2>
+<p>{{ record.test_result if record and record.test_result else "なし" }}</p>
+</div>
+
+
+<div class="section">
+<h2>💬 不安・相談</h2>
+
+{% if record and record.consult %}
+<p>{{ record.consult }}</p>
+{% else %}
+<p class="empty">特になし</p>
+{% endif %}
+</div>
+
+
+<div class="section">
+<h2>📄 医師からの指示</h2>
+<p>{{ record.doctor_note if record and record.doctor_note else "なし" }}</p>
+</div>
+
+
+</div>
+</body>
+</html>

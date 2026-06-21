@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>カレンダー</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+}
+
+/* カード */
+.container {
+  max-width: 520px;
+  margin: 20px auto;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+}
+
+/* 月移動ボタン */
+.nav {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.nav a {
+  text-decoration: none;
+  background: #e3f2fd;
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin: 0 6px;
+  color: #0a3d62;
+}
+
+/* カレンダー */
+table {
+  border-collapse: separate;
+  border-spacing: 6px;
+  width: 100%;
+}
+
+th {
+  padding: 6px;
+}
+
+td {
+  width: 44px;
+  height: 44px;
+  text-align: center;
+  border-radius: 12px;
+  background: #f1f5ff;
+}
+
+/* 今日 */
+.today {
+  background-color: #ffe5ec;
+  font-weight: bold;
+}
+
+/* 空白セル */
+.empty {
+  background-color: #f3f3f3;
+}
+
+/* 記録ありの日 */
+.has-record {
+  display: block;
+  background: #8ecae6;
+  color: #0a3d62;
+  border-radius: 10px;
+  padding: 6px;
+  text-decoration: none;
+}
+
+/* 記録あり＋今日 */
+.today .has-record {
+  background: #ffafcc;
+}
+
+/* 通常リンク */
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* 下メニュー */
+.bottom {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.bottom a {
+  text-decoration: none;
+  background: #e8f5e9;
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin: 4px;
+  color: #2e7d32;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📅 {{ year }}年{{ month }}月</h2>
+
+{# ===== 前月・翌月リンク ===== #}
+{% set prev_year = year if month > 1 else year - 1 %}
+{% set prev_month = month - 1 if month > 1 else 12 %}
+
+{% set next_year = year if month < 12 else year + 1 %}
+{% set next_month = month + 1 if month < 12 else 1 %}
+
+<div class="nav">
+  <a href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">◀ 前月</a>
+  <a href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">翌月 ▶</a>
+</div>
+
+
+<table>
+<tr>
+  <th>日</th><th>月</th><th>火</th><th>水</th>
+  <th>木</th><th>金</th><th>土</th>
+</tr>
+
+{% for day in month_days %}
+
+  {% if loop.index0 % 7 == 0 %}
+  <tr>
+  {% endif %}
+
+  {% if day == 0 %}
+      <td class="empty"></td>
+
+  {% else %}
+
+      {% set date_str = "%04d-%02d-%02d"|format(year, month, day) %}
+
+      <td
+      {% if day == today.day and month == today.month and year == today.year %}
+          class="today"
+      {% endif %}
+      >
+
+      {% if date_str in recorded_dates %}
+          <a class="has-record"
+             href="{{ url_for('detail', date=date_str) }}">
+              {{ day }}
+          </a>
+      {% else %}
+          <a href="{{ url_for('detail', date=date_str) }}">
+              {{ day }}
+          </a>
+      {% endif %}
+
+      </td>
+
+  {% endif %}
+
+  {% if loop.index0 % 7 == 6 %}
+  </tr>
+  {% endif %}
+
+{% endfor %}
+</table>
+
+
+<div class="bottom">
+  <a href="{{ url_for('home') }}">🏠 ホーム</a>
+  <a href="/logout">🚪 ログアウト</a>
+</div>
+
+</div>
+</body>
+</html>

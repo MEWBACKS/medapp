@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>基本情報登録</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+}
+
+/* カード */
+.container {
+  max-width: 640px;
+  margin: 20px auto;
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+}
+
+/* 入力 */
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* 保存ボタン（パステル緑） */
+.save-btn {
+  background: #8fd9c4;
+  color: #083d2e;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  width: 100%;
+  font-size: 17px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* 上メニュー */
+.top-menu {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.top-menu a {
+  text-decoration: none;
+  background: #e3f2fd;
+  padding: 6px 10px;
+  border-radius: 10px;
+  color: #0a3d62;
+  font-size: 14px;
+}
+
+/* セクション */
+.section {
+  background: #f9fbff;
+  padding: 10px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🧍 基本情報</h2>
+
+<!-- メニュー -->
+<div class="top-menu">
+  <a href="{{ url_for('home') }}">🏠 ホーム</a>
+  <a href="/">📝 記録入力</a>
+  <a href="/history">📖 履歴</a>
+  <a href="/pharmacy">📱 薬局提示</a>
+</div>
+
+
+<form method="POST">
+
+<div class="section">
+<label>🎂 生年月日</label>
+<input type="date" name="birth"
+       value="{{ profile.birth if profile else '' }}">
+</div>
+
+
+<div class="section">
+<label>💊 アレルギー</label>
+<textarea name="allergy" rows="3"
+placeholder="例：ペニシリン、そば、花粉">{{ data.allergy }}</textarea>
+
+<label>🏥 持病</label>
+<textarea name="disease" rows="3"
+placeholder="例：喘息、高血圧">{{ data.disease }}</textarea>
+
+<label>💉 服用中の薬</label>
+<textarea name="medicine" rows="3"
+placeholder="例：ロキソニン、アムロジピン">{{ data.medicine }}</textarea>
+
+<label>🏥 かかりつけ医・病院</label>
+<input name="hospital"
+placeholder="〇〇クリニック、△△病院"
+value="{{ data.hospital }}">
+</div>
+
+
+<div class="section">
+<h3>🚬 喫煙</h3>
+
+<label>喫煙の有無</label>
+<select name="smoking">
+  <option value="なし" {% if profile and profile.smoking=="なし" %}selected{% endif %}>なし</option>
+  <option value="あり" {% if profile and profile.smoking=="あり" %}selected{% endif %}>あり</option>
+</select>
+
+<label>1日の本数</label>
+<input type="text" name="smoking_amount"
+       placeholder="例：10本"
+       value="{{ profile.smoking_amount if profile else '' }}">
+
+<label>いつから</label>
+<input type="text" name="smoking_since"
+       placeholder="例：20歳から / 2018年～"
+       value="{{ profile.smoking_since if profile else '' }}">
+</div>
+
+
+<div class="section">
+<h3>🍺 飲酒</h3>
+
+<label>飲酒の有無</label>
+<select name="alcohol">
+  <option value="なし" {% if profile and profile.alcohol=="なし" %}selected{% endif %}>なし</option>
+  <option value="あり" {% if profile and profile.alcohol=="あり" %}selected{% endif %}>あり</option>
+</select>
+
+<label>頻度・量</label>
+<input type="text" name="alcohol_amount"
+       placeholder="例：週3日 ビール1本"
+       value="{{ profile.alcohol_amount if profile else '' }}">
+</div>
+
+
+<div class="section">
+<label>📝 メモ</label>
+<textarea name="memo" rows="3"
+placeholder="伝えておきたいこと">{{ data.memo }}</textarea>
+</div>
+
+
+<button class="save-btn" type="submit">💾 保存</button>
+
+</form>
+
+</div>
+</body>
+</html>

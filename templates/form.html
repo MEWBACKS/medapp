@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<!-- ここがブラウザのタブに出るタイトル -->
+<title>🏥 病院結果入力</title>
+
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic Pro", sans-serif;
+  background: #f6f8fb;
+}
+
+/* 画面中央カード */
+.container {
+  max-width: 650px;
+  margin: 20px auto;
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* 入力欄 */
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* ボタン */
+button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  font-size: 17px;
+  border-radius: 12px;
+  border: none;
+}
+
+/* 保存ボタン（パステル緑） */
+.save-btn {
+    background: #8fd9c4;
+    color: #083d2e;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.save-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* 上メニューボタン */
+.menu-btn {
+  display:inline-block;
+  width:48%;
+  padding:12px;
+  margin:3px;
+
+  text-align:center;
+  text-decoration:none;
+
+  border-radius: 14px !important;
+  border: none;
+
+  font-weight:bold;
+  font-size:16px;
+
+  transition: 0.2s;
+}
+
+.menu-btn:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+/* 下メニュー */
+.bottom-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.bottom-card {
+  background: #f0f4ff;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.bottom-card a {
+  text-decoration: none;
+  color: #333;
+}
+
+.icon {
+  font-size: 22px;
+  display: block;
+}
+
+.text {
+  font-size: 12px;
+}
+
+.top-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* 謎の「-」対策 */
+.top-menu a::before,
+.top-menu a::after {
+  content: none !important;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ===== ここが画面の大タイトル ===== -->
+<h1>
+{% if edit %}
+✏ 病院データ編集
+{% else %}
+🏥 病院結果入力
+{% endif %}
+</h1>
+
+
+<!-- ===== 上メニュー ===== -->
+<div class="top-menu">
+
+  <a href="{{ url_for('profile') }}"
+     class="menu-btn"
+     style="background:#8ecae6; color:#0a3d62;">
+    🧍 基本情報
+  </a>
+
+  <a href="{{ url_for('pharmacy') }}"
+     class="menu-btn"
+     style="background:#ffafcc; color:#5a1e3c;">
+    📱 薬局提示
+  </a>
+
+</div>
+
+
+<form method="post">
+
+<label>日付（受診日）</label>
+<input type="date" name="date"
+       value="{{ data.date if data else '' }}"
+       required
+       {% if edit %}readonly{% endif %}>
+
+
+<label>病院血圧</label>
+<input type="text" name="blood_pressure"
+       placeholder="例：120/80（病院での測定）"
+       value="{{ data.blood_pressure if data else '' }}">
+
+
+<label>診察時体温（℃）</label>
+<input type="text" name="temperature"
+       placeholder="例：36.5"
+       value="{{ data.temperature if data else '' }}">
+
+
+<label>検査値（HbA1c・LDL・eGFR など）</label>
+<input type="text" name="test_result"
+       placeholder="例：HbA1c 6.8 / LDL 120"
+       value="{{ data.test_result if data else '' }}">
+
+
+<label>受診時の症状</label>
+<textarea name="symptom" rows="3"
+placeholder="頭痛、めまい、咳 など">{{ data.symptom if data else '' }}</textarea>
+
+
+<label>来局理由</label>
+<select name="visit_reason">
+<option value="">選択してください</option>
+
+<option value="処方箋"
+{% if data and data.visit_reason=="処方箋" %}selected{% endif %}>
+処方箋</option>
+
+<option value="薬の相談"
+{% if data and data.visit_reason=="薬の相談" %}selected{% endif %}>
+薬の相談</option>
+
+<option value="体調不良"
+{% if data and data.visit_reason=="体調不良" %}selected{% endif %}>
+体調不良</option>
+
+<option value="残薬調整"
+{% if data and data.visit_reason=="残薬調整" %}selected{% endif %}>
+残薬調整</option>
+</select>
+
+
+<label>💬 医師・薬剤師に相談したこと</label>
+<textarea name="consult" rows="3">{{ data.consult if data else '' }}</textarea>
+
+
+<label>👩‍⚕️ 医師からの指示・処方変更</label>
+<textarea name="doctor_note" rows="3">{{ data.doctor_note if data else '' }}</textarea>
+
+
+<button class="save-btn" type="submit">
+{% if edit %}✏ 更新{% else %}💾 保存{% endif %}
+</button>
+
+</form>
+
+
+<!-- ===== 下メニュー ===== -->
+<div class="bottom-menu">
+
+<div class="bottom-card">
+<a href="{{ url_for('home') }}">
+<span class="icon">🏠</span>
+<span class="text">ホーム</span>
+</a>
+</div>
+
+<div class="bottom-card">
+<a href="/history">
+<span class="icon">📖</span>
+<span class="text">履歴</span>
+</a>
+</div>
+
+<div class="bottom-card">
+<a href="/calendar">
+<span class="icon">📅</span>
+<span class="text">カレンダー</span>
+</a>
+</div>
+
+<div class="bottom-card">
+<a href="/graph">
+<span class="icon">📊</span>
+<span class="text">グラフ</span>
+</a>
+</div>
+
+</div>
+
+</div>
+</body>
+</html>
