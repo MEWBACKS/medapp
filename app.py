@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, url_for
+from dotenv import load_dotenv
 import csv, os, hashlib, datetime, calendar
+
+load_dotenv()
 
 
 # ===== 年齢計算 =====
@@ -29,7 +32,7 @@ import matplotlib.pyplot as plt
 # =======================
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = os.getenv("SECRET_KEY")
 
 BASE_DIR = os.path.dirname(__file__)
 DATA_FOLDER = os.path.join(BASE_DIR, "user_data")
